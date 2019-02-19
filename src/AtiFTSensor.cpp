@@ -136,7 +136,7 @@ void AtiFTSensor::read_ft()
     ssize_t response = rt_dev_recv(socket_, &rcv_msg, sizeof(rcv_msg), 0);
     if(response != sizeof(rcv_msg))
     {
-      printf("Received message of unexpected length %d\n", response);
+      printf("Received message of unexpected length %ld\n", response);
     }
 
     //update state / first get the byte order right
