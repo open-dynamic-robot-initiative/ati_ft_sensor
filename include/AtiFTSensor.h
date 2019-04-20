@@ -90,6 +90,7 @@ private:
   static THREAD_FUNCTION_RETURN_TYPE read_ft(void* instance_pointer)
   {
     ((AtiFTSensor*)(instance_pointer))->read_ft();
+      return THREAD_FUNCTION_RETURN_VALUE;
   }
 
   void read_ft();
