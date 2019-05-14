@@ -17,7 +17,7 @@
 #else
 #include <mutex>          // std::mutex
 #endif
-#include <real_time_tools/realtime_thread_creation.hpp>
+#include <real_time_tools/thread.hpp>
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>

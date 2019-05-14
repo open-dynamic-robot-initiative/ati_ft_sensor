@@ -101,8 +101,8 @@ bool AtiFTSensor::initialize()
   //now create the reading thread
   // real_time_tools::create_realtime_thread(
   //     reading_thread_, &AtiFTSensor::read_ft, this);
-  real_time_tools::create_realtime_thread(
-      reading_thread_, &ati_ft_sensor::AtiFTSensor::read_ft, this);
+  reading_thread_.create_realtime_thread(
+    &ati_ft_sensor::AtiFTSensor::read_ft, this);
 
   return (initialized_ = true);
 }
@@ -254,7 +254,7 @@ void AtiFTSensor::stop()
     rt_mutex_acquire(&mutex_,TM_INFINITE);
     going_ = false;
     rt_mutex_release(&mutex_);
-    real_time_tools::join_thread(reading_thread_);
+    reading_thread_.join();
     rt_dev_close(socket_);
 #ifdef XENOMAI
     rt_pipe_delete(&stream_pipe_);

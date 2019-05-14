@@ -25,7 +25,7 @@
 #include <chrono>
 #include <thread>
 
-#include <real_time_tools/realtime_thread_creation.hpp>
+#include <real_time_tools/thread.hpp>
 #include <AtiFTSensor.h>
 
 ati_ft_sensor::AtiFTSensor sensor;
@@ -71,8 +71,8 @@ THREAD_FUNCTION_RETURN_TYPE logTask(void* args)
 int main(int argc, char* argv[])
 {
   real_time_tools::RealTimeThread thread_;
-  real_time_tools::create_realtime_thread(thread_, &logTask, nullptr);
-  real_time_tools::join_thread(thread_);
+  thread_.create_realtime_thread(&logTask, nullptr);
+  thread_.join();
 
   return 0;
 }
