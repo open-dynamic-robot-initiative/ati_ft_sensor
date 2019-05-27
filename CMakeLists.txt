@@ -12,9 +12,9 @@ execute_process(
 string(TOLOWER "${UNAME_OUT}" OS_VERSION)
 
 if(OS_VERSION MATCHES "xenomai")
-  find_package(catkin REQUIRED COMPONENTS xenomai_ros real_time_tools)
+  find_package(catkin REQUIRED COMPONENTS xenomai_ros mpi_cmake_modules real_time_tools)
 else()
-  find_package(catkin REQUIRED COMPONENTS real_time_tools)
+  find_package(catkin REQUIRED COMPONENTS mpi_cmake_modules real_time_tools)
 endif()
 
 
@@ -100,12 +100,7 @@ else()
     )
 endif()
 
-# add a target to generate API documentation with Doxygen
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-add_custom_target(${PROJECT_NAME}_doc
-${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile
-WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-COMMENT "Generating API documentation with Doxygen" VERBATIM
-)
-endif(DOXYGEN_FOUND)
+##########################
+# building documentation #
+##########################
+build_doxygen_documentation()
