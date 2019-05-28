@@ -99,12 +99,11 @@ bool AtiFTSensor::initialize()
 #endif
 
   //now create the reading thread
-  // real_time_tools::create_realtime_thread(
-  //     reading_thread_, &AtiFTSensor::read_ft, this);
   reading_thread_.create_realtime_thread(
     &ati_ft_sensor::AtiFTSensor::read_ft, this);
 
-  return (initialized_ = true);
+  initialized_ = true;
+  return initialized_;
 }
 
 void AtiFTSensor::read_ft()
