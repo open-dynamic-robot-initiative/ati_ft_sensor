@@ -1,20 +1,15 @@
 cmake_minimum_required(VERSION 2.6)
 
 project(ati_ft_sensor)
-include(cmake/os_detection.cmake)
+
+find_package(catkin REQUIRED COMPONENTS mpi_cmake_modules real_time_tools)
 
 # This macro sets the C++ preprocessor flags "XENOMAI", "RT_PREEMPT", or
 # "UBUNTU" according to the current operating system.
-DEFINE_OS()
+define_os()
 
-execute_process(
-  COMMAND uname -a OUTPUT_VARIABLE UNAME_OUT)
-string(TOLOWER "${UNAME_OUT}" OS_VERSION)
-
-if(OS_VERSION MATCHES "xenomai")
-  find_package(catkin REQUIRED COMPONENTS xenomai_ros mpi_cmake_modules real_time_tools)
-else()
-  find_package(catkin REQUIRED COMPONENTS mpi_cmake_modules real_time_tools)
+if(CURRENT_OS MATCHES "xenomai")
+  find_package(catkin REQUIRED COMPONENTS xenomai_ros)
 endif()
 
 
@@ -29,7 +24,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 find_package(Boost COMPONENTS system filesystem thread REQUIRED)
 
-if(OS_VERSION MATCHES "xenomai")
+if(CURRENT_OS MATCHES "xenomai")
   catkin_package(
     INCLUDE_DIRS include
     CATKIN_DEPENDS xenomai_ros
