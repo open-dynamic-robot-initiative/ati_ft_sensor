@@ -1,8 +1,9 @@
-/*
- * AtiFTSensor.h
- *
- *  Created on: Oct 22, 2013
- *      Author: righetti
+/**
+ * @file AtiFTSensor.h
+ * @author Ludovic Righetti
+ * @license License BSD-3-Clause
+ * @copyright Copyright (c) 2019, New York University and Max Planck Gesellschaft.
+ * @date 2013-10-22
  */
 
 #ifndef ATIFTSENSOR_H_
