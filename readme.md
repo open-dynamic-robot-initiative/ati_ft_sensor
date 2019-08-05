@@ -1,4 +1,4 @@
-# ATI_FT_SENSOR
+# ati_ft_sensor
 
 ## What is it
 
