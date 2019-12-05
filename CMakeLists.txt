@@ -8,7 +8,9 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
 
 project(ati_ft_sensor)
 
-find_package(catkin REQUIRED COMPONENTS mpi_cmake_modules real_time_tools)
+find_package(catkin REQUIRED COMPONENTS
+    mpi_cmake_modules
+    real_time_tools)
 
 # This macro sets the C++ preprocessor flags "XENOMAI", "RT_PREEMPT", or
 # "UBUNTU" according to the current operating system.
@@ -69,7 +71,7 @@ endif()
 
 ADD_LIBRARY(${PROJECT_NAME} src/AtiFTSensor.cpp)
 target_link_libraries(${PROJECT_NAME}
-  real_time_tools)
+    ${catkin_LIBRARIES})
 
 if(Xenomai_FOUND)
   target_link_libraries(${PROJECT_NAME}
