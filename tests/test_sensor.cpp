@@ -43,7 +43,7 @@ void warnOnSwitchToSecondaryMode(int)
   std::cerr << "WARNING: Switched out of RealTime. Stack-trace in syslog.\n";
 }
 
-THREAD_FUNCTION_RETURN_TYPE logTask(void* args)
+THREAD_FUNCTION_RETURN_TYPE logTask(void*)
 {
   sensor.initialize();
   std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -68,7 +68,7 @@ THREAD_FUNCTION_RETURN_TYPE logTask(void* args)
 
 
 
-int main(int argc, char* argv[])
+int main(int, char*)
 {
   real_time_tools::RealTimeThread thread_;
   thread_.create_realtime_thread(&logTask, nullptr);
