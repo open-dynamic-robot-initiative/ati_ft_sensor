@@ -68,7 +68,7 @@ THREAD_FUNCTION_RETURN_TYPE logTask(void*)
 
 
 
-int main(int, char*)
+int main()
 {
   real_time_tools::RealTimeThread thread_;
   thread_.create_realtime_thread(&logTask, nullptr);
