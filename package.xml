@@ -1,17 +1,35 @@
 <?xml version="1.0"?>
-<package format="2">
-  <name>ati_ft_sensor</name>
-  <version>1.0.0</version>
-  <description>sl</description>
-  <license>TODO</license>
-  <author email="ludovic.righetti@tuebingen.mpg.de">Ludovic Righetti</author>
-  <maintainer email="aherzog@tuebingen.mpg.de">Alexander Herzog</maintainer>
+<?xml-model
+   href="http://download.ros.org/schema/package_format3.xsd"
+   schematypens="http://www.w3.org/2001/XMLSchema"?>
 
-  <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>mpi_cmake_modules</build_depend>
-  <depend>real_time_tools</depend>
+<package format="3">
 
-  <export>
-  </export>
+    <name>ati_ft_sensor</name>
+    <version>1.0.0</version>
+    
+    <description>
+        Provide drivers for the ATI force torque sensor.
+    </description>
+
+    <author email="ludovic.righetti@tuebingen.mpg.de">Ludovic Righetti</author>
+    <maintainer email="vberenz@tuebingen.mpg.de">Vincent Berenz</maintainer>
+
+    <license>BSD 3-clause</license>
+
+    <!-- ROS2 build -->
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <!-- CMake module containing helper to find the OS, boost, python, etc. -->
+    <build_depend>mpi_cmake_modules</build_depend>
+
+    <!-- Standard dependency -->
+    <depend>Boost</depend>
+    <!-- Real time threads. -->
+    <depend>real_time_tools</depend>
+    
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+
 </package>
