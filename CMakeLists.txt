@@ -29,11 +29,14 @@ find_package(mpi_cmake_modules REQUIRED)
 find_package(real_time_tools REQUIRED)
 find_package(Boost REQUIRED)
 
-set(Xenomai_additionnal_INCLUDE_DIR "")
+set(Xenomai_additionnal_INCLUDE_DIR)
 if(${CURRENT_OS} MATCHES "xenomai")
   set(Xenomai_additionnal_INCLUDE_DIR /usr/local/rtnet/include
                                       /usr/src/rtnet/stack/include)
 endif()
+
+# export de dependencies
+ament_export_dependencies(Boost real_time_tools)
 
 set(all_targets)
 set(all_target_exports)
