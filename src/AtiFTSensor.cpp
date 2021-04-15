@@ -76,12 +76,12 @@ bool AtiFTSensor::initialize()
   }
   if(rt_dev_bind(socket_, (struct sockaddr *) &local_address_, sizeof(struct sockaddr_in)) < 0)
   {
-    printf("cannot bind socket, error: %d, %s", errno, strerror(errno));
+    printf("cannot bind socket, error: %d, %s\n", errno, strerror(errno));
     return false;
   }
   if(rt_dev_connect(socket_, (struct sockaddr *) &remote_address_, sizeof(struct sockaddr_in)) < 0)
   {
-    printf("cannot connect socket, error: %d, %s", errno, strerror(errno));
+    printf("cannot connect socket, error: %d, %s\n", errno, strerror(errno));
     return false;
   }
 
@@ -90,7 +90,7 @@ bool AtiFTSensor::initialize()
 #ifdef XENOMAI
   if(rt_pipe_create(&stream_pipe_, "ati_ft_stream",P_MINOR_AUTO,0))
   {
-    printf("cannot create pipe, error: %d, %s", errno, strerror(errno));
+    printf("cannot create pipe, error: %d, %s\n", errno, strerror(errno));
     return false;
   }
 

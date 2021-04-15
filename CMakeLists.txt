@@ -37,9 +37,11 @@ endif()
 
 # export de dependencies
 ament_export_dependencies(Boost real_time_tools)
+# Export the target.
+ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
-set(all_targets)
-set(all_target_exports)
+set(all_lib_targets)
+set(all_exe_targets)
 
 #
 # Add the main library
@@ -57,24 +59,21 @@ ament_target_dependencies(${PROJECT_NAME} Boost)
 ament_target_dependencies(${PROJECT_NAME} Threads)
 target_link_libraries(${PROJECT_NAME} real_time_tools::real_time_tools)
 target_link_libraries(${PROJECT_NAME} ${Xenomai_LIBS})
-# Export the target.
-ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 # For the installation
-list(APPEND all_targets ${PROJECT_NAME})
-list(APPEND all_target_exports export_${PROJECT_NAME})
+list(APPEND all_lib_targets ${PROJECT_NAME})
 
 #
 # Building some utilities
 #
 if(Xenomai_FOUND)
-  add_executable(test_sensor_stream tests/test_sensor_stream.cpp)
-  target_link_libraries(test_sensor_stream ${PROJECT_NAME})
-  list(APPEND all_targets test_sensor_stream)
+  add_executable(ati_ft_sensor_test_sensor_stream tests/test_sensor_stream.cpp)
+  target_link_libraries(ati_ft_sensor_test_sensor_stream ${PROJECT_NAME})
+  list(APPEND all_exe_targets ati_ft_sensor_test_sensor_stream)
 endif()
 
-add_executable(test_sensor tests/test_sensor.cpp)
-target_link_libraries(test_sensor ${PROJECT_NAME})
-list(APPEND all_targets test_sensor)
+add_executable(ati_ft_sensor_test_sensor tests/test_sensor.cpp)
+target_link_libraries(ati_ft_sensor_test_sensor ${PROJECT_NAME})
+list(APPEND all_exe_targets ati_ft_sensor_test_sensor)
 
 #
 # building documentation
@@ -87,14 +86,29 @@ add_documentation()
 install(DIRECTORY include/ DESTINATION include)
 
 install(
-  TARGETS ${all_targets}
-  EXPORT ${all_target_exports}
+  TARGETS ${all_lib_targets} ${all_exe_targets}
+  EXPORT export_${PROJECT_NAME}
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
   INCLUDES
   DESTINATION include)
 
+foreach(exe_target ${all_exe_targets})
+  # Install a symlink of the executable in lib/ati_ft_sensor
+  string(
+    CONCAT symlink_command
+          "execute_process("
+          "  COMMAND ${CMAKE_COMMAND} -E make_directory "
+          "  ${CMAKE_INSTALL_PREFIX}/bin/)\n"
+          "execute_process("
+          "  COMMAND ${CMAKE_COMMAND} -E create_symlink "
+          "  ${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}/${exe_target}"
+          "  ${CMAKE_INSTALL_PREFIX}/bin/${exe_target})"
+  )
+  install(CODE ${symlink_command})
+endforeach()
+  
 #
 # Export the package as ament
 #
