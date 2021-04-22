@@ -2,14 +2,14 @@
 <img src="doc/images/ati_mini_40.jpg" width="400"><br>  
 Interface using internet connexion to a ATI force torque sensor.
 
-### Installation:
+### Installation
 
-#### Standard dependencies:
+#### Standard dependencies
 
 This package is based on [ROS2](https://docs.ros.org/).
 Currently based on ROS2 dashing release.
 
-#### Download the pacakge:
+#### Download the pacakge
 
 Use the `git clone` or [treep](https://gitlab.is.tue.mpg.de/amd-clmc/treep)
 using the [treep_machines_in_motion](https://github.com/machines-in-motion/treep_machines_in_motion) configuration.
@@ -41,7 +41,7 @@ cd mkdir -p ~/devel/workspace
 colcon build
 ```
 
-### Usage:
+### Usage
 
 #### Usage with rt_preempt
 
@@ -63,6 +63,23 @@ The ATI FT sensor is connected to the control PC via ethernet. To access the ATI
 Make sure all of the processes for dynamic_graph and ATI sensor are killed.
 
 #### Demos/Examples
+You find examples of how to stream data in the tests/ folder.  
+  
+You can run it via
+  ```
+  ait_ft_sensor_test_sensor
+  ```
+or (with ROS2)
+  ```
+  ros2 run ati_ft_sensor ait_ft_sensor_test_sensor
+  ```
+You also can run it with Xenomai by adding `_stream` to the previous commands.
+
+The output would be like
+  ```
+  rdt_seq=153674, ft_seq=674807363, status=0
+  -0.03      0.03      -0.01      0.00      0.00      -0.00 
+  ```
 
 ### Hardware specs
 You can find more detail in below links:
@@ -74,12 +91,10 @@ You can find more detail in below links:
 - [Quick Start Guide](9610-05-1022%20Quick%20Start.pdf)  
 These information is downloaded from the manufacturer's website, and we are not responsible for any information that they contain.
 
-### Authors
+### Original Authors
 
 - Ludovic Righetti
 - Alexander Herzog
-- Maximilien Naveau
-- Elham Daneshmand
 
 ### License and Copyrights
 
