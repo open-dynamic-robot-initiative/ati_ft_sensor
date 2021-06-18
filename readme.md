@@ -71,7 +71,7 @@ You can run it via
   ```
 or (with ROS2)
   ```
-  ros2 run ati_ft_sensor ait_ft_sensor_test_sensor
+  ros2 run ati_ft_sensor ati_ft_sensor_test_sensor
   ```
 You also can run it with Xenomai by adding `_stream` to the previous commands.
 
