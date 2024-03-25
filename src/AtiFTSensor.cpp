@@ -246,6 +246,20 @@ void AtiFTSensor::getFT(double* force, double* torque)
   rt_mutex_release(&mutex_);
 }
 
+const Eigen::Ref<Eigen::Matrix<double, 6, 1>> AtiFTSensor::getFT_vector()
+{
+  rt_mutex_acquire(&mutex_,TM_INFINITE);
+
+  for(int i=0; i<3; ++i)
+  {
+    force_torque_[i] = F_[i];
+    force_torque_[i+3] = T_[i];
+  }
+
+  rt_mutex_release(&mutex_);
+  return force_torque_;
+}
+
 void AtiFTSensor::stop()
 {
   if(initialized_)

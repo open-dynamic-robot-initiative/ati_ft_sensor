@@ -24,10 +24,11 @@ endif()
 #
 
 # depend on ament macros
-find_package(ament_cmake REQUIRED)
 find_package(mpi_cmake_modules REQUIRED)
 find_package(real_time_tools REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS thread)
+find_package(Eigen3 REQUIRED)
+find_package(pybind11 REQUIRED)
 
 set(Xenomai_additionnal_INCLUDE_DIR)
 if(${CURRENT_OS} MATCHES "xenomai")
@@ -35,13 +36,8 @@ if(${CURRENT_OS} MATCHES "xenomai")
                                       /usr/src/rtnet/stack/include)
 endif()
 
-# export de dependencies
-ament_export_dependencies(Boost real_time_tools)
-# Export the target.
-ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
-set(all_lib_targets)
-set(all_exe_targets)
+set(all_targets)
 
 #
 # Add the main library
@@ -55,12 +51,13 @@ target_include_directories(
          $<INSTALL_INTERFACE:include> ${Xenomai_INCLUDE_DIR}
          ${Xenomai_additionnal_INCLUDE_DIR})
 # Link the dependencies
-ament_target_dependencies(${PROJECT_NAME} Boost)
-ament_target_dependencies(${PROJECT_NAME} Threads)
+target_link_libraries(${PROJECT_NAME} Boost::boost)
+target_link_libraries(${PROJECT_NAME} Boost::thread)
 target_link_libraries(${PROJECT_NAME} real_time_tools::real_time_tools)
+target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
 target_link_libraries(${PROJECT_NAME} ${Xenomai_LIBS})
 # For the installation
-list(APPEND all_lib_targets ${PROJECT_NAME})
+list(APPEND all_targets ${PROJECT_NAME})
 
 #
 # Building some utilities
@@ -68,48 +65,55 @@ list(APPEND all_lib_targets ${PROJECT_NAME})
 if(Xenomai_FOUND)
   add_executable(ati_ft_sensor_test_sensor_stream tests/test_sensor_stream.cpp)
   target_link_libraries(ati_ft_sensor_test_sensor_stream ${PROJECT_NAME})
-  list(APPEND all_exe_targets ati_ft_sensor_test_sensor_stream)
+  list(APPEND all_targets ati_ft_sensor_test_sensor_stream)
 endif()
 
 add_executable(ati_ft_sensor_test_sensor tests/test_sensor.cpp)
 target_link_libraries(ati_ft_sensor_test_sensor ${PROJECT_NAME})
-list(APPEND all_exe_targets ati_ft_sensor_test_sensor)
+list(APPEND all_targets ati_ft_sensor_test_sensor)
 
 #
 # building documentation
 #
 add_documentation()
 
+# python bindings
+set(py_ati_core_SRC_FILES
+  srcpy/ati_ft_sensor_cpp.cpp
+)
+
+pybind11_add_module(ati_ft_sensor_cpp MODULE ${py_ati_core_SRC_FILES})
+target_link_libraries(ati_ft_sensor_cpp PRIVATE pybind11::module)
+target_link_libraries(ati_ft_sensor_cpp PRIVATE ati_ft_sensor)
+
+# install the bindings
+get_python_install_dir(python_install_dir)
+install(TARGETS ati_ft_sensor_cpp DESTINATION ${python_install_dir})
+
+# install python package
+install(
+  DIRECTORY python
+  DESTINATION "${python_install_dir}"
+  PATTERN "*.pyc" EXCLUDE 
+  PATTERN "__pycache__" EXCLUDE
+)
+
 #
 # Install the package
 #
+
+# install the include directory
 install(DIRECTORY include/ DESTINATION include)
 
+# command to install the library and binaries
 install(
-  TARGETS ${all_lib_targets} ${all_exe_targets}
-  EXPORT export_${PROJECT_NAME}
+  TARGETS ${all_targets}
+  EXPORT ${PROJECT_NAME}Targets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION lib/${PROJECT_NAME}
+  RUNTIME DESTINATION bin
   INCLUDES
   DESTINATION include)
 
-foreach(exe_target ${all_exe_targets})
-  # Install a symlink of the executable in lib/ati_ft_sensor
-  string(
-    CONCAT symlink_command
-          "execute_process("
-          "  COMMAND ${CMAKE_COMMAND} -E make_directory "
-          "  ${CMAKE_INSTALL_PREFIX}/bin/)\n"
-          "execute_process("
-          "  COMMAND ${CMAKE_COMMAND} -E create_symlink "
-          "  ${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}/${exe_target}"
-          "  ${CMAKE_INSTALL_PREFIX}/bin/${exe_target})"
-  )
-  install(CODE ${symlink_command})
-endforeach()
-  
-#
-# Export the package as ament
-#
-ament_package()
+# Export this package as a cmake package.
+generate_cmake_package()

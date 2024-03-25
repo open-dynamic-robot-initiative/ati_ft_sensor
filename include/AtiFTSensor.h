@@ -22,7 +22,7 @@
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
-
+#include <Eigen/Eigen>
 
 namespace ati_ft_sensor
 {
@@ -36,6 +36,7 @@ public:
 
   void getStatus(uint32_t& rdt_seq, uint32_t& ft_seq, uint32_t& status);
   void getFT(double* force, double* torque);
+  const Eigen::Ref<Eigen::Matrix<double, 6, 1>> getFT_vector();
   void stream(bool stream);
   void stop();
   void setBias();
@@ -47,6 +48,7 @@ public:
   uint32_t rdt_sequence_;
   uint32_t ft_sequence_;
   uint32_t status_;
+  Eigen::Matrix<double, 6, 1> force_torque_;
 
 // Streaming support is only available on xenomai.
 #ifdef XENOMAI
